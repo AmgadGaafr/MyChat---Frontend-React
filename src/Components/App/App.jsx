@@ -4,12 +4,20 @@ import Cookies from 'js-cookie';
 import Login from '../Login/Login.jsx';
 import Message from '../Message/Message.jsx';
 import Conversations from '../Conversations/Conversations.jsx';
+import SendMessage from '../SendMessage.jsx/SendMessage.jsx';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [currentConversation, setCurrentConversation] = useState(null);
 
+  // Handle selecting a conversation
+  const handleGetCurrentConversationId = (id) => {
+    setCurrentConversation(id);
+  };
+
+  // Check for authentication token and set state
   useEffect(() => {
     const token = Cookies.get('token');
     if (token) {
@@ -17,6 +25,7 @@ function App() {
     }
   }, []);
 
+  // Fetch user info once authenticated
   useEffect(() => {
     if (isAuthenticated && !userInfo) {
       axios.get('http://127.0.0.1:8000/api/user/get_info', {
@@ -33,9 +42,10 @@ function App() {
     }
   }, [isAuthenticated, userInfo]);
 
+  // Fetch messages for the current conversation
   useEffect(() => {
-    if (isAuthenticated) {
-      axios.get('http://127.0.0.1:8000/api/message/get/4', {
+    if (isAuthenticated && currentConversation) {
+      axios.get(`http://127.0.0.1:8000/api/message/get/${currentConversation}`, {
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`
         }
@@ -47,7 +57,7 @@ function App() {
         console.error('There was an error!', error);
       });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, currentConversation]);
 
   return (
     <div className="container">
@@ -55,18 +65,15 @@ function App() {
       {isAuthenticated && userInfo && (
         <main>
           <aside className="conversations">
-            <Conversations />
+            <Conversations handleGetCurrentConversationId={handleGetCurrentConversationId} />
           </aside>
           <section className="messages">
             <ul>
-            {messages.map((message) => (
-              <Message messages={message} key={message.id} />
-            ))}
+              {messages.map((message) => (
+                <Message message={message} key={message.id} />
+              ))}
             </ul>
-            <section className="send-message">
-              <input type="text" />
-              <button>Send</button>
-            </section>
+            <SendMessage conversationId={currentConversation}/>
           </section>
         </main>
       )}

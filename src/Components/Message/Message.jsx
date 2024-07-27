@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 
-function Message({ messages }) {
+function Message({ message }) {
     return (
         <li className="message">
-            <p>{messages.content}</p>
-            <span>{messages.User.username}</span>
+            <p>{message.content}</p>
+            <span>{message.User.username}</span> 
         </li>
     );
 }
 
 Message.propTypes = {
-    messages: PropTypes.shape({
+    message: PropTypes.shape({
         id: PropTypes.number.isRequired,
         content: PropTypes.string.isRequired,
         User: PropTypes.shape({
