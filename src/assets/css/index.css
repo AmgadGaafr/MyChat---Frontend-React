@@ -1,0 +1,94 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.container {
+  height: 90vh;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  border: 1px solid #c93232;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.conversations {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 25%;
+  border: 1px solid #c93232;
+}
+
+.conversations ul {
+  list-style: none;
+  padding: 0;
+}
+
+.conversations ul li {
+  padding: 5px;
+  border: 1px solid #c93232;
+  cursor: pointer;
+}
+
+.messages {
+  position: relative;
+  padding: 10px;
+  height: 100%;
+  width: 75%;
+}
+
+.messages ul {
+  list-style: none;
+  padding: 0;
+}
+
+.messages ul li {
+  padding: 3px 20px;
+  border: 1px solid #c93232;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.send-message {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.send-message input {
+  width: 80%;
+  padding: 15px;
+  border: 1px solid #c93232;
+}
+
+.send-message button {
+  padding: 15px;
+  border: 1px solid #c93232;
+  background-color: #c93232;
+  color: #fff;
+  cursor: pointer;
+}
