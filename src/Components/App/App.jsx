@@ -3,13 +3,14 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Login from '../Login/Login.jsx';
 import Message from '../Message/Message.jsx';
-import Conversations from '../Conversations/Conversations.jsx';
-import SendMessage from '../SendMessage.jsx/SendMessage.jsx';
+import SendMessage from '../SendMessage/SendMessage.jsx';
+import Conversation from '../Conversations/Conversation.jsx';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [conversations, setConversations] = useState([]);
   const [currentConversation, setCurrentConversation] = useState(null);
 
   // Handle selecting a conversation
@@ -42,6 +43,21 @@ function App() {
     }
   }, [isAuthenticated, userInfo]);
 
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/api/conversation/get_conversations', {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`
+        }
+    })
+    .then((response) => {
+        setCurrentConversation(response.data[0].id);
+        setConversations(response.data);
+    })
+  .catch((error) => {
+    console.error('There was an error!', error);
+  });
+}, []);
+
   // Fetch messages for the current conversation
   useEffect(() => {
     if (isAuthenticated && currentConversation) {
@@ -65,7 +81,11 @@ function App() {
       {isAuthenticated && userInfo && (
         <main>
           <aside className="conversations">
-            <Conversations handleGetCurrentConversationId={handleGetCurrentConversationId} />
+            <ul>
+            {conversations.map((conversation) => (
+              <Conversation conversation={conversation} key={conversation.id} onClick={() => handleGetCurrentConversationId(conversation.id)}/>
+            ))}
+            </ul>
           </aside>
           <section className="messages">
             <ul>
