@@ -1,28 +1,31 @@
 import PropTypes from 'prop-types';
 
 function Conversation({ conversation, onClick }) {
-    const date = new Date(conversation.messages[0].createdAt).toLocaleDateString() + ' ' + new Date(conversation.messages[0].createdAt).toLocaleTimeString();
-
-    return ( 
-        <li className="conversation" onClick={onClick}>
-            <p>{conversation.name}</p>
-            <span>{conversation.messages[0].User.username} : {conversation.messages[0].content} - {date}</span>
-        </li>
+    const date = new Date(conversation.lastMessage.createdAt).toLocaleDateString() + ' ' + new Date(conversation.lastMessage.createdAt).toLocaleTimeString();
+    
+    return (    
+       <li key={conversation.conversation.id} className="conversation" onClick={() => onClick(conversation.conversation.id)}>
+           <p>{conversation.conversation.name}</p>
+           <span>{conversation.lastMessage.User.username} : {conversation.lastMessage.content} - {date}</span>
+       </li>
     );
 }
 
 Conversation.propTypes = {
     conversation: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        messages: PropTypes.arrayOf(PropTypes.shape({
+        conversation: PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            name: PropTypes.string.isRequired
+        }).isRequired,
+        lastMessage: PropTypes.shape({
             id: PropTypes.number.isRequired,
             content: PropTypes.string.isRequired,
+            createdAt: PropTypes.string.isRequired,
             User: PropTypes.shape({
+                id: PropTypes.number.isRequired,
                 username: PropTypes.string.isRequired
             }).isRequired,
-            createdAt: PropTypes.string.isRequired
-        })).isRequired,
+        }).isRequired,
     }).isRequired,
     onClick: PropTypes.func.isRequired
 };
